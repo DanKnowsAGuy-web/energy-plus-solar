@@ -6,6 +6,13 @@ import "@fontsource-variable/inter/wght.css";
 import "@fontsource/ibm-plex-mono/400.css";
 import "@fontsource/ibm-plex-mono/500.css";
 import "@fontsource/oswald/600.css";
+// Body (Hanken Grotesk) + mono readouts (Geist Mono): self-hosted instead of
+// the Google Fonts <link>, so there is no external render-blocking stylesheet.
+import "@fontsource/hanken-grotesk/400.css";
+import "@fontsource/hanken-grotesk/500.css";
+import "@fontsource/hanken-grotesk/700.css";
+import "@fontsource/geist-mono/400.css";
+import "@fontsource/geist-mono/500.css";
 import "../styles/global.css";
 
 interface Props {
@@ -64,13 +71,6 @@ const tlClean = tlPath(false);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
 
-    <!-- Hybrid-theme prototype fonts (brutal4): grotesque + mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700&family=Geist+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>

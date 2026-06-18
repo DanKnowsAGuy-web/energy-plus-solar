@@ -1,19 +1,19 @@
 ---
 // THE THESIS, in one visual. A solar array sized to the raw building load is
-// oversized. Shave 20-30% of the load with efficiency first and the array
+// oversized. Cut about a third of the load with efficiency first and the array
 // shrinks by the same share: lower system size, lower upfront price, faster
 // payback, plus a Phase-1 margin the panel-only vendor never books.
 //
 // The panel grid is generated once at compile time. The "trimmed" cells (the
-// last ~26%) carry .sz__cell--cut and fade/collapse out when the section
+// last third) carry .sz__cell--cut and fade/collapse out when the section
 // reveals, so the array is literally seen shrinking. Reduced-motion shows the
 // smaller array as the static end-state.
 import CtaPair from "./CtaPairV.astro";
 import Disc from "../Disc.astro";
 
-const COLS = 8;
+const COLS = 9;
 const ROWS = 5;
-const CUT_FROM_COL = 6; // columns 6-7 (the last 2 of 8 = 25%) are the trim
+const CUT_FROM_COL = 6; // columns 6-8 (the last 3 of 9 = a third) are the trim
 const cells = [];
 for (let r = 0; r < ROWS; r++) {
   for (let c = 0; c < COLS; c++) {
@@ -21,7 +21,9 @@ for (let r = 0; r < ROWS; r++) {
   }
 }
 
-// Two columns of the same offer, before vs after the load cut.
+// Two columns of the same offer, before vs after the load cut. The closing
+// "reaction" line is the brain-dead-obvious punchline: a big number stalls,
+// a smaller number signs.
 const compare = [
   {
     key: "panel",
@@ -29,23 +31,25 @@ const compare = [
     sub: "sized to the raw load",
     array: "100%",
     rows: [
-      { k: "System size", v: "Full" },
       { k: "Upfront price", v: "Highest" },
-      { k: "Payback", v: "Longest" },
+      { k: "Barrier to entry", v: "High" },
+      { k: "Close rate", v: "Lower" },
       { k: "Your profit centers", v: "One" },
     ],
+    reaction: "Let me think about it.",
   },
   {
     key: "eff",
     label: "Efficiency-first",
-    sub: "load cut 20–30% first",
-    array: "≈ 25% smaller",
+    sub: "load cut about a third first",
+    array: "a third smaller",
     rows: [
-      { k: "System size", v: "20–30% smaller", good: true },
       { k: "Upfront price", v: "Drops with it", good: true },
-      { k: "Payback", v: "Months faster", good: true },
+      { k: "Barrier to entry", v: "Lower", good: true },
+      { k: "Close rate", v: "Higher", good: true },
       { k: "Your profit centers", v: "Two", good: true },
     ],
+    reaction: "Where do I sign.",
   },
 ];
 ---
@@ -85,17 +89,17 @@ const compare = [
       <!-- the load bar: waste shaved off, then the array follows -->
       <div class="sz__loadwrap">
         <p class="sz__load-label">The building's annual load</p>
-        <div class="sz__bar" role="img" aria-label="The building's load, with roughly a quarter removed by efficiency before solar is sized.">
+        <div class="sz__bar" role="img" aria-label="The building's load, with about a third removed by efficiency before solar is sized.">
           <span class="sz__bar-keep">
-            <span class="sz__bar-txt">Load solar must offset</span>
+            <span class="sz__bar-txt">Load solar offsets</span>
           </span>
           <span class="sz__bar-cut">
-            <span class="sz__bar-txt">Waste, removed first</span>
+            <span class="sz__bar-txt">Waste, cut first</span>
           </span>
         </div>
         <p class="sz__load-note">
-          Harmonization, HVAC, and refrigeration efficiency take 20–30%+ off the
-          number before a single panel is sized.<Disc to="results" />
+          Harmonization, HVAC, and refrigeration efficiency take about a third
+          off the number before a single panel is sized.<Disc to="results" />
         </p>
       </div>
     </div>
@@ -119,15 +123,20 @@ const compare = [
               </li>
             ))}
           </ul>
+          <p class="sz__card-reaction">
+            <span class="sz__card-reaction-label">The client hears the price and says</span>
+            <span class="sz__card-reaction-quote">{col.reaction}</span>
+          </p>
         </div>
       ))}
     </div>
 
     <div class="sz__payoff reveal">
+      <p class="sz__chain">Cut the waste. Free the cash. Close the solar.</p>
       <p class="sz__payoff-line">
-        The freed cash flow from the load cut helps fund the array, so the
-        client's ROI starts before the panels do, and the smaller, cheaper
-        system is the one that finally pencils.
+        The cash flow from the load cut helps fund the array, so your client's
+        ROI starts before the panels do, and the smaller, cheaper system is the
+        one that finally pencils.
       </p>
       <CtaPair />
     </div>
@@ -216,7 +225,7 @@ const compare = [
   .sz__bar {
     margin-top: var(--space-xs);
     display: flex;
-    height: clamp(3rem, 7vw, 4.2rem);
+    min-height: clamp(3.4rem, 7vw, 4.6rem);
     border-radius: var(--radius-s);
     overflow: hidden;
     border: 1px solid var(--line-strong);
@@ -238,13 +247,17 @@ const compare = [
     background: color-mix(in srgb, var(--cost) 24%, var(--surface));
     color: var(--cost);
   }
+  /* labels sit inside their segment and wrap rather than clip when the cut
+     segment is narrow */
   .sz__bar-txt {
     font-family: var(--font-mono);
     font-size: var(--step--2);
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-    padding: 0 0.6rem;
-    opacity: 0.9;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    text-align: center;
+    text-wrap: balance;
+    padding: 0.25rem 0.5rem;
+    opacity: 0.92;
   }
 
   /* comparison cards */
@@ -301,7 +314,38 @@ const compare = [
   .sz__row-v { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
   .sz__card-rows li.is-good .sz__row-v { color: var(--mint); font-weight: 500; }
 
+  /* the punchline: a big number stalls, a smaller number signs */
+  .sz__card-reaction {
+    margin-top: var(--space-m);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 0.3rem;
+  }
+  .sz__card-reaction-label {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .sz__card-reaction-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--step-1);
+    line-height: 1.2;
+    color: var(--cost);
+  }
+  .sz__card--eff .sz__card-reaction-quote { color: var(--mint); }
+
   .sz__payoff { margin-top: var(--space-xl); max-width: 46rem; }
+  .sz__chain {
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    letter-spacing: 0.01em;
+    color: var(--gold-text);
+    margin-bottom: var(--space-s);
+  }
   .sz__payoff-line {
     font-family: var(--font-serif);
     font-size: var(--step-1);
@@ -327,15 +371,15 @@ const compare = [
       opacity: 0.12;
       transform: scale(0.55);
     }
-    .sz.is-armed .sz__bar-keep { flex-basis: 74%; }
-    .sz.is-armed .sz__bar-cut { flex-basis: 26%; }
+    .sz.is-armed .sz__bar-keep { flex-basis: 67%; }
+    .sz.is-armed .sz__bar-cut { flex-basis: 33%; }
   }
 
   /* reduced motion / no-JS fallback: show the efficient end-state up front */
   @media (prefers-reduced-motion: reduce) {
     .sz__cell--cut { opacity: 0.14; transform: scale(0.55); }
-    .sz__bar-keep { flex-basis: 74%; }
-    .sz__bar-cut { flex-basis: 26%; }
+    .sz__bar-keep { flex-basis: 67%; }
+    .sz__bar-cut { flex-basis: 33%; }
   }
 </style>
 

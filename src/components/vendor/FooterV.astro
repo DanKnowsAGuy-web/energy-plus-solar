@@ -12,7 +12,7 @@ const year = new Date().getFullYear();
       <span class="footer-lockup">
         <img class="footer-lockup__logo" src={logo.src} width="104" height="30" alt="Energy Plus" />
         <span class="footer-lockup__div" aria-hidden="true"></span>
-        <span class="wordmark__hotels">Partners</span>
+        <span class="wordmark__industry">Solar</span>
       </span>
       <p class="site-footer__line">
         The efficiency engine behind solar vendors. We diagnose the building,
@@ -26,7 +26,7 @@ const year = new Date().getFullYear();
       <a href="#procurement">The engineer</a>
       <a href="#profit">Your margin</a>
       <a href="#proof">Proof</a>
-      <a href="#book">Become a Partner</a>
+      <a href="#book">Apply Now</a>
     </nav>
   </div>
 
@@ -87,3 +87,110 @@ const year = new Date().getFullYear();
     <span class="site-footer__neutral">Independent Energy Solutions Partner.</span>
   </div>
 </footer>
+
+<style>
+  /* Footer styling ported from the family Footer.astro (it was missing here,
+     leaving the footer unstyled). Lockup matches the header: logo, pike
+     divider, then the vertical name in Oswald. */
+  .site-footer {
+    border-top: 1px solid var(--line);
+    background: var(--bg-header);
+    padding-block: var(--space-xl) var(--space-l);
+  }
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-l);
+  }
+  .site-footer__brand {
+    max-width: 34ch;
+  }
+  .footer-lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .footer-lockup__logo {
+    height: 26px;
+    width: auto;
+    display: block;
+  }
+  .footer-lockup__div {
+    width: 1px;
+    height: 20px;
+    background: var(--line-strong);
+  }
+  .wordmark__industry {
+    font-family: "Oswald", var(--font-sans);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .site-footer__line {
+    margin-top: var(--space-s);
+    font-size: var(--step--1);
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .site-footer__nav {
+    display: grid;
+    gap: 0.65rem;
+    align-content: start;
+  }
+  .site-footer__nav a {
+    color: var(--body);
+    text-decoration: none;
+    font-size: var(--step--1);
+    transition: color 0.25s ease;
+  }
+  .site-footer__nav a:hover {
+    color: var(--gold-text);
+  }
+  .site-footer__legal {
+    margin-top: var(--space-xl);
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 78ch;
+  }
+  .site-footer__legal strong {
+    color: var(--body);
+    font-weight: 600;
+  }
+  .site-footer__notes {
+    margin: var(--space-m) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--space-s);
+    max-width: 78ch;
+  }
+  .site-footer__notes li {
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--muted);
+    scroll-margin-top: 5rem;
+    transition: color 0.3s ease;
+  }
+  .site-footer__notes li:target {
+    color: var(--body);
+  }
+  .site-footer__notes strong {
+    color: var(--body);
+    font-weight: 600;
+  }
+  .site-footer__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-s);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+</style>

@@ -1,16 +1,43 @@
 ---
-// Vendor-facing CTA pair. Same mechanics as CtaPair.astro (Cal.com book +
-// text-the-founder panel) but the audience is the solar vendor/installer, so
-// the labels and the prefilled SMS speak to a white-label partnership.
+// Vendor-facing CTA pair: "Apply Now" (Cal.com booking) + "Just text the
+// founder".
+//
+// The text-the-founder button adapts to the device:
+//   - Mobile: one tap fires an sms: deep link, opening Messages with the note
+//     prefilled. No form, no editable box.
+//   - Desktop (where sms: does nothing): reveals a QR code that, when scanned
+//     with a phone, opens Messages prefilled to Dan, plus a prefilled email
+//     fallback. The QR is generated at build time (no runtime/external calls).
+import QRCode from "qrcode";
+
 const { size = "" } = Astro.props;
 const lg = size === "lg" ? " btn--lg" : "";
+
+const PHONE = "+18647770688";
 const PHONE_DISPLAY = "(864) 777-0688";
+const EMAIL = "dan@danknowsaguy.org";
 const MSG =
   "Hi Dan, I sell solar and I'd like to add an efficiency-first offering so I can shrink system sizing, close more deals, and open a new profit center. How does the white-label partnership work?";
 const CAL_LINK = "dan-knows-a-gut/15min";
+
+// Build-time QR. SMSTO is the canonical QR payload for a pre-filled SMS and is
+// the format phone cameras recognize most reliably. Dark modules on white so it
+// stays scannable against the dark panel.
+// width is baked into the SVG so it sizes correctly even though Astro's scoped
+// styles don't reach set:html-injected markup.
+const qrSvg = await QRCode.toString(`SMSTO:${PHONE}:${MSG}`, {
+  type: "svg",
+  margin: 1,
+  width: 132,
+  errorCorrectionLevel: "M",
+  color: { dark: "#0f1418", light: "#ffffff" },
+});
+const mailtoHref =
+  `mailto:${EMAIL}?subject=${encodeURIComponent("Solar partner inquiry")}` +
+  `&body=${encodeURIComponent(MSG)}`;
 ---
 
-<div class="tf-cta">
+<div class="tf-cta" data-phone={PHONE} data-msg={MSG}>
   <div class="tf-cta__row">
     <button
       type="button"
@@ -27,15 +54,18 @@ const CAL_LINK = "dan-knows-a-gut/15min";
     </button>
   </div>
 
+  <!-- Desktop-only reveal (mobile taps go straight to Messages via JS). -->
   <div class="tf-panel" role="group" aria-label="Text the founder">
-    <p class="tf-panel__to">To <span>Dan &middot; {PHONE_DISPLAY}</span></p>
-    <textarea class="tf-panel__msg js-tf-msg" rows="4" spellcheck="false">{MSG}</textarea>
-    <div class="tf-panel__foot">
-      <span class="tf-panel__hint">Opens in your messages, ready to send.</span>
-      <a class="tf-panel__send js-tf-send" href="#" data-phone="+18647770688">
-        Send message
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12 h13 M12 5 l7 7 -7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-      </a>
+    <div class="tf-qr">
+      <div class="tf-qr__code" set:html={qrSvg}></div>
+      <div class="tf-qr__copy">
+        <p class="tf-qr__lead">Point your phone's camera here to text Dan, message ready to send.</p>
+        <p class="tf-qr__num">{PHONE_DISPLAY}</p>
+        <a class="tf-qr__email" href={mailtoHref}>
+          Or email Dan instead
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12 h13 M12 5 l7 7 -7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -46,6 +76,10 @@ const CAL_LINK = "dan-knows-a-gut/15min";
     window.__tfInit = true;
     const ua = navigator.userAgent || "";
     const isIOS = /iP(hone|ad|od)/.test(ua) || (/Mac/.test(ua) && "ontouchend" in document);
+    // "Can this device send an SMS from a tap?" Coarse pointer covers phones and
+    // tablets; the UA check is a backstop.
+    const isMobile =
+      matchMedia("(pointer: coarse)").matches || /Android|iP(hone|ad|od)/i.test(ua);
 
     const ensureCal = () => {
       if (window.__calReady) return;
@@ -62,83 +96,94 @@ const CAL_LINK = "dan-knows-a-gut/15min";
       addEventListener(ev, ensureCal, { once: true, passive: true }),
     );
 
-    const buildSms = (cta) => {
-      const msg = cta.querySelector(".js-tf-msg");
-      const send = cta.querySelector(".js-tf-send");
-      if (!msg || !send) return;
-      send.href = "sms:" + (send.getAttribute("data-phone") || "") + (isIOS ? "&" : "?") + "body=" + encodeURIComponent(msg.value);
-    };
-    const autosize = (el) => {
-      if (!el || el.offsetWidth < 60) return;
-      el.style.height = "auto";
-      el.style.height = el.scrollHeight + "px";
-    };
     const closeTf = (cta) => {
-      cta.querySelector(".tf-panel").classList.remove("is-open");
+      const panel = cta.querySelector(".tf-panel");
+      if (panel) panel.classList.remove("is-open");
       const t = cta.querySelector(".js-tf-toggle");
       if (t) t.setAttribute("aria-expanded", "false");
     };
+
     document.addEventListener("click", (e) => {
       const bookT = e.target.closest(".js-book-toggle");
       if (bookT) { ensureCal(); closeTf(bookT.closest(".tf-cta")); return; }
+
       const tfT = e.target.closest(".js-tf-toggle");
       if (tfT) {
         const cta = tfT.closest(".tf-cta");
-        const tf = cta.querySelector(".tf-panel");
-        const willOpen = !tf.classList.contains("is-open");
-        if (willOpen) {
-          tf.classList.add("is-open");
-          tfT.setAttribute("aria-expanded", "true");
-          buildSms(cta);
-          const m = cta.querySelector(".js-tf-msg");
-          if (m) { autosize(m); setTimeout(() => { autosize(m); m.focus(); }, 80); }
-        } else { closeTf(cta); }
+        // Mobile: skip the panel, open Messages prefilled in one tap.
+        if (isMobile) {
+          const phone = cta.getAttribute("data-phone") || "";
+          const msg = cta.getAttribute("data-msg") || "";
+          window.location.href = "sms:" + phone + (isIOS ? "&" : "?") + "body=" + encodeURIComponent(msg);
+          return;
+        }
+        // Desktop: reveal the scan-to-text QR + email fallback.
+        const panel = cta.querySelector(".tf-panel");
+        const willOpen = !panel.classList.contains("is-open");
+        panel.classList.toggle("is-open", willOpen);
+        tfT.setAttribute("aria-expanded", String(willOpen));
         return;
       }
-    });
-    document.addEventListener("input", (e) => {
-      const t = e.target;
-      if (t && t.classList && t.classList.contains("js-tf-msg")) { buildSms(t.closest(".tf-cta")); autosize(t); }
     });
   })();
 </script>
 
 <style>
-  /* Mirrors CtaPair.astro exactly so the vendor CTA matches the operator
-     page pixel-for-pixel (Astro styles are scoped, so they must be repeated). */
   .tf-cta { width: 100%; }
   .tf-cta__row { display: flex; flex-wrap: wrap; gap: var(--space-s); align-items: center; }
 
+  /* text-the-founder panel: smooth in-place expand (desktop only) */
   .tf-panel {
     overflow: hidden; max-height: 0; opacity: 0;
     transition: max-height 0.5s var(--ease-out-quart), opacity 0.35s ease, margin-top 0.5s var(--ease-out-quart);
   }
-  .tf-panel.is-open { max-height: 34rem; opacity: 1; margin-top: var(--space-m); }
-  .tf-panel__to { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
-  .tf-panel__to span { color: var(--body); }
-  .tf-panel__msg {
-    width: 100%; max-width: 38rem; margin-top: 0.5rem; resize: vertical;
-    overflow-y: hidden;
-    background: var(--mint-soft); color: var(--ink);
-    border: 1px solid color-mix(in srgb, var(--mint) 38%, transparent);
-    border-radius: 16px; padding: 0.75rem 0.95rem;
-    font-family: var(--font-sans); font-size: var(--step-0); line-height: 1.5;
+  .tf-panel.is-open { max-height: 26rem; opacity: 1; margin-top: var(--space-m); }
+
+  .tf-qr {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    flex-wrap: wrap;
+    max-width: 34rem;
+    padding: var(--space-m);
+    border: 1px solid color-mix(in srgb, var(--mint) 30%, transparent);
+    background: var(--mint-soft);
+    border-radius: 16px;
   }
-  .tf-panel__msg:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
-  .tf-panel__foot {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: var(--space-s); flex-wrap: wrap; max-width: 38rem; margin-top: 0.6rem;
+  .tf-qr__code {
+    flex: none;
+    background: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    line-height: 0;
   }
-  .tf-panel__hint { font-size: 0.72rem; color: var(--muted); }
-  .tf-panel__send {
-    display: inline-flex; align-items: center; gap: 0.5em;
-    background: var(--mint); color: var(--bg);
-    font-family: var(--font-sans); font-weight: 600; font-size: var(--step--1);
-    padding: 0.6em 1.1em; border-radius: 999px; text-decoration: none; cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
+  /* :global because the SVG is injected via set:html and carries no scope id */
+  .tf-qr__code :global(svg) { display: block; width: 132px; height: 132px; }
+  .tf-qr__copy { display: grid; gap: 0.3rem; min-width: 12rem; flex: 1 1 12rem; }
+  .tf-qr__lead {
+    font-size: var(--step--1);
+    line-height: 1.45;
+    color: var(--body);
+    max-width: 26ch;
   }
-  .tf-panel__send svg { width: 1.05em; height: 1.05em; }
-  .tf-panel__send:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--mint) 86%, white); }
+  .tf-qr__num {
+    font-family: var(--font-mono);
+    font-size: var(--step-0);
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .tf-qr__email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-top: 0.15rem;
+    font-weight: 600;
+    font-size: var(--step--1);
+    color: var(--gold-text);
+    text-decoration: none;
+  }
+  .tf-qr__email svg { width: 1em; height: 1em; }
+  .tf-qr__email:hover { text-decoration: underline; }
 
   @media (prefers-reduced-motion: reduce) {
     .tf-panel { transition: opacity 0.3s ease; }

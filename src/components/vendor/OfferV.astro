@@ -1,0 +1,185 @@
+---
+// Vendor reframe of OfferLean. One named partner program (Hormozi stacked
+// shape): everything the vendor gets to put in front of their client, the
+// margin/de-risk line in place of a fabricated total, and a guarantee that
+// protects the vendor's relationship with their client.
+import CtaPair from "./CtaPairV.astro";
+import Disc from "../Disc.astro";
+const items = [
+  { name: "Meter-verified diagnosis, done for you", desc: "we run it on the building, you keep the client", val: "on us", ref: "terms" },
+  { name: "The full efficiency stack to resell", desc: "HVAC, refrigeration, harmonization, demand", val: "your Phase-1 margin", ref: "terms" },
+  { name: "White-label or co-branded", desc: "your name on the proposal, our engineering behind it", val: "your brand", ref: "terms" },
+  { name: "Array re-sizing support", val: "smaller system, same offset", ref: "results" },
+  { name: "Utility program capture for the client", val: "up to 50–75% of project cost", ref: "utility" },
+  { name: "Section 179D deduction", val: "up to $5.94 / sq ft, one-time", ref: "tax" },
+  { name: "Floor-verified savings before you pitch", desc: "you quote a number you can stand behind", val: "measured, not claimed", ref: "results" },
+];
+---
+
+<section class="section offerl" id="offer" aria-labelledby="offerl-title">
+  <div class="container">
+    <div class="offerl__inner reveal">
+      <h2 class="offerl__title" id="offerl-title">What you get as a partner.</h2>
+
+      <div class="offerl__stack instrument-frame">
+        <p class="offerl__stack-name">The White-Label Efficiency Program</p>
+        <p class="offerl__stack-sub">
+          One partnership. Everything below is yours to put in front of a
+          client, and the savings are measured at their meter before you ever
+          stake your name on a number.
+        </p>
+
+        <ul class="offerl__items">
+          {items.map((it) => (
+            <li class="offerl__item">
+              <span class="offerl__item-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+              <span class="offerl__item-main">
+                <span class="offerl__item-name">{it.name}</span>
+                {it.desc && <span class="offerl__item-desc">{it.desc}</span>}
+              </span>
+              <span class="offerl__item-val">{it.val}<Disc to={it.ref} /></span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="offerl__floor">
+          <div class="offerl__floor-row">
+            <span class="offerl__floor-label">What it adds to your deal</span>
+            <span class="offerl__floor-val">a Phase-1 profit center + an easier Phase-2 close</span>
+          </div>
+          <div class="offerl__floor-row">
+            <span class="offerl__floor-label">Your cost to find out</span>
+            <span class="offerl__floor-cost">$0</span>
+          </div>
+        </div>
+
+        <div class="offerl__guarantee">
+          <p class="offerl__guarantee-h">
+            <span class="offerl__guarantee-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4.5 5.5v5.2c0 4.6 3.2 8.4 7.5 9.8 4.3-1.4 7.5-5.2 7.5-9.8V5.5L12 2.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /><path d="M8.5 12 11 14.5 16 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </span>
+            The Floor Guarantee
+          </p>
+          <p class="offerl__guarantee-p">
+            If we don't prove the savings floor at the client's own meter,
+            nothing is installed and no one owes anything. Your name only goes on
+            a number we've already measured. Verify first, commit after.
+          </p>
+        </div>
+      </div>
+
+      <CtaPair />
+    </div>
+  </div>
+</section>
+
+<style>
+  .offerl { border-top: 1px solid var(--line); }
+  .offerl__title { font-size: var(--step-3); max-width: 16ch; }
+
+  .offerl__stack {
+    margin-top: var(--space-l);
+    max-width: 46rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+  }
+  .offerl__stack-name {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .offerl__stack-sub {
+    margin-top: var(--space-2xs);
+    font-size: var(--step-0);
+    line-height: 1.55;
+    color: var(--body);
+    max-width: 48ch;
+  }
+
+  .offerl__items { list-style: none; margin: var(--space-m) 0 0; padding: 0; display: grid; }
+  .offerl__item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.85rem;
+    align-items: start;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .offerl__item-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 1.4rem; height: 1.4rem;
+    margin-top: 0.05rem;
+    color: var(--gold-text);
+  }
+  .offerl__item-ico svg { width: 1.4rem; height: 1.4rem; }
+  .offerl__item-name { display: block; font-size: var(--step-0); font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .offerl__item-desc { display: block; margin-top: 0.1rem; font-size: var(--step--1); color: var(--muted); line-height: 1.35; }
+  .offerl__item-val {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--gold-text);
+    text-align: right;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .offerl__floor {
+    margin-top: var(--space-m);
+    padding-top: var(--space-m);
+    border-top: 2px solid var(--gold-soft);
+    display: grid;
+    gap: var(--space-xs);
+  }
+  .offerl__floor-row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-m); }
+  .offerl__floor-label { font-size: var(--step-0); color: var(--body); }
+  .offerl__floor-val {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--ink);
+    text-align: right;
+    line-height: 1.15;
+    max-width: 22ch;
+  }
+  .offerl__floor-cost {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    color: var(--gold-text);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .offerl__guarantee {
+    margin-top: var(--space-m);
+    padding: var(--space-m);
+    background: color-mix(in srgb, var(--mint) 7%, transparent);
+    border: 1px solid color-mix(in srgb, var(--mint) 35%, transparent);
+    border-radius: var(--radius-s);
+  }
+  .offerl__guarantee-h {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--mint);
+    font-size: var(--step-0);
+  }
+  .offerl__guarantee-ico { display: inline-grid; place-items: center; }
+  .offerl__guarantee-ico svg { width: 1.2rem; height: 1.2rem; }
+  .offerl__guarantee-p { margin-top: 0.4rem; font-size: var(--step--1); line-height: 1.55; color: var(--body); }
+
+  .offerl__inner :global(.cta-pair),
+  .offerl__stack + :global(*) { margin-top: var(--space-l); }
+
+  @media (max-width: 540px) {
+    .offerl__item { grid-template-columns: auto 1fr; }
+    .offerl__item-val { grid-column: 2; text-align: left; margin-top: 0.1rem; }
+  }
+</style>

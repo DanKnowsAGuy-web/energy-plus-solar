@@ -1,0 +1,89 @@
+---
+// Vendor-page footer. Same structure + disclaimer notes as Footer.astro,
+// reframed for the solar-vendor audience (the reader is the installer; the
+// building owner is "their client").
+import logo from "../../assets/energy-plus-logo.png";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <span class="footer-lockup">
+        <img class="footer-lockup__logo" src={logo.src} width="104" height="30" alt="Energy Plus" />
+        <span class="footer-lockup__div" aria-hidden="true"></span>
+        <span class="wordmark__hotels">Partners</span>
+      </span>
+      <p class="site-footer__line">
+        The efficiency engine behind solar vendors. We diagnose the building,
+        verify the savings, and shrink the load so your array sells itself.
+      </p>
+    </div>
+
+    <nav class="site-footer__nav" aria-label="Footer">
+      <a href="#sizing">The math</a>
+      <a href="#why-deals-die">Why deals die</a>
+      <a href="#procurement">The engineer</a>
+      <a href="#profit">Your margin</a>
+      <a href="#proof">Proof</a>
+      <a href="#book">Become a Partner</a>
+    </nav>
+  </div>
+
+  <div class="container" id="disclaimers">
+    <p class="site-footer__legal">
+      <strong>How to read this page.</strong> Energy Plus is an independent
+      energy solutions partner. We do not manufacture equipment. We diagnose
+      each building and procure, size, and integrate the right efficiency
+      technologies from our stack so a solar vendor can offer a complete
+      solution. The numbered notes below apply to the marked figures and
+      statements throughout this page.
+    </p>
+    <ol class="site-footer__notes">
+      <li id="disc-results">
+        <strong>1. Savings, sizing, and performance figures.</strong> All
+        savings, load-reduction, system-sizing, payback, equipment-life, and
+        bill-reduction figures shown (including ranges such as 20&ndash;30% and
+        8&ndash;14%) are illustrative estimates or results achieved at specific
+        facilities under their own conditions. They are not predictions or
+        guarantees of your clients' results. Array-sizing reductions depend on
+        the building's load profile after efficiency measures, local solar
+        resource, and design assumptions. Case studies reflect results with
+        specific technologies we deploy. Actual results depend on the building,
+        climate, occupancy, equipment condition, and utility rates, which is
+        exactly why we measure the floor at the meter before anyone commits.
+        Modeled numbers are directional estimates, not quotes.
+      </li>
+      <li id="disc-terms">
+        <strong>2. Partnership terms and eligibility.</strong> Our white-label
+        and co-sell partner program, including margin, pricing, and contract
+        terms, is offered case-by-case and depends on factors such as deal
+        volume, the markets you serve, and the size of the buildings'
+        electricity bills. "No cost," "the diagnosis is on us," and "nothing
+        owed" describe the diagnosis and pilot phase for qualifying buildings;
+        they do not describe the cost of any installed solution. Eligibility,
+        scheduling, and availability are determined during the partner
+        application process.
+      </li>
+      <li id="disc-tax">
+        <strong>3. Tax incentives.</strong> Section 179D and any tax figures
+        are potential amounts based on current federal rules and assumptions;
+        they are not tax advice. Actual deductions depend on the building, the
+        work performed, and the taxpayer's situation. Consult a qualified tax
+        advisor.
+      </li>
+      <li id="disc-utility">
+        <strong>4. Utility and incentive programs.</strong> Utility-program
+        coverage (for example, "up to 75%," or the state percentages shown in
+        the calculator) varies by state, utility, and program, and is subject to
+        program availability, funding, and qualification. Amounts shown are
+        illustrative and are not guaranteed.
+      </li>
+    </ol>
+  </div>
+
+  <div class="container site-footer__meta">
+    <span>&copy; {year} Energy Plus</span>
+    <span class="site-footer__neutral">Independent Energy Solutions Partner.</span>
+  </div>
+</footer>

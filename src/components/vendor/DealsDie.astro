@@ -1,0 +1,115 @@
+---
+// NEW section. The three reasons a solar deal stalls, each killed by leading
+// with efficiency. Ledger layout echoes ActFourLean: the objection on the
+// left, the efficiency-first answer on the right.
+const rows = [
+  {
+    key: "price",
+    kill: "“The upfront price is too high.”",
+    line: "Sizing to the raw bill inflates the system. The sticker shock kills the deal before payback ever enters the conversation.",
+    fix: "Cut 20–30% of the load and the array, and its price, shrinks by the same share.",
+  },
+  {
+    key: "roi",
+    kill: "“The payback takes too long.”",
+    line: "On a big system the ROI horizon stretches past what the owner will commit to, so the proposal sits.",
+    fix: "Efficiency savings start day one and help fund the array, pulling payback in by months.",
+  },
+  {
+    key: "size",
+    kill: "“We don't have the roof / budget for that.”",
+    line: "An oversized array runs out of roof or capital. A 'no' on size reads as a 'no' on solar entirely.",
+    fix: "A smaller system fits the roof and the budget, turning a hard no into a staged yes.",
+  },
+];
+---
+
+<section class="section dd" id="why-deals-die" aria-labelledby="dd-title">
+  <div class="container">
+    <div class="dd__head reveal">
+      <h2 class="dd__title" id="dd-title">Why solar deals die, and how efficiency-first revives them.</h2>
+      <p class="dd__lede lede">
+        Every stalled proposal dies of the same three things. Each one is a
+        function of system size, and system size is a function of load.
+      </p>
+    </div>
+
+    <ul class="dd__ledger">
+      <li class="dd__head-row" aria-hidden="true">
+        <span class="dd__h-kill">The objection that kills it</span>
+        <span class="dd__h-fix">What efficiency-first does</span>
+      </li>
+      {rows.map((it, i) => (
+        <li class="dd__row reveal" style={`--i: ${i}`}>
+          <span class="dd__detail">
+            <span class="dd__kill">{it.kill}</span>
+            <span class="dd__line">{it.line}</span>
+          </span>
+          <span class="dd__fix">
+            <span class="dd__fix-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </span>
+            <span class="dd__fix-txt">{it.fix}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .dd { border-top: 1px solid var(--line); }
+  .dd__head { max-width: 54rem; }
+  .dd__title { font-size: var(--step-3); max-width: 22ch; }
+  .dd__lede { margin-top: var(--space-m); max-width: 56ch; }
+
+  .dd__ledger { list-style: none; margin: var(--space-xl) 0 0; padding: 0; }
+  .dd__head-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1rem, 4vw, 3rem);
+    padding-bottom: var(--space-2xs);
+    border-bottom: 1px solid var(--line-strong);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .dd__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(1rem, 4vw, 3rem);
+    padding: clamp(1.2rem, 3vw, 1.8rem) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .dd__detail { display: flex; flex-direction: column; gap: 0.4rem; }
+  .dd__kill {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--cost);
+    line-height: 1.2;
+  }
+  .dd__line { font-size: var(--step--1); line-height: 1.55; color: var(--body); max-width: 46ch; }
+
+  .dd__fix { display: grid; grid-template-columns: auto 1fr; gap: 0.7rem; align-items: start; }
+  .dd__fix-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 1.5rem; height: 1.5rem;
+    margin-top: 0.1rem;
+    color: var(--mint);
+  }
+  .dd__fix-ico svg { width: 1.5rem; height: 1.5rem; }
+  .dd__fix-txt { font-size: var(--step-0); line-height: 1.5; color: var(--ink); max-width: 40ch; }
+
+  @media (max-width: 46rem) {
+    .dd__head-row { display: none; }
+    .dd__row { grid-template-columns: 1fr; gap: var(--space-s); }
+    .dd__fix {
+      padding-top: var(--space-s);
+      border-top: 1px dashed var(--line);
+    }
+  }
+</style>

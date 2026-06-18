@@ -1,0 +1,358 @@
+---
+// THE THESIS, in one visual. A solar array sized to the raw building load is
+// oversized. Shave 20-30% of the load with efficiency first and the array
+// shrinks by the same share: lower system size, lower upfront price, faster
+// payback, plus a Phase-1 margin the panel-only vendor never books.
+//
+// The panel grid is generated once at compile time. The "trimmed" cells (the
+// last ~26%) carry .sz__cell--cut and fade/collapse out when the section
+// reveals, so the array is literally seen shrinking. Reduced-motion shows the
+// smaller array as the static end-state.
+import CtaPair from "./CtaPairV.astro";
+import Disc from "../Disc.astro";
+
+const COLS = 8;
+const ROWS = 5;
+const CUT_FROM_COL = 6; // columns 6-7 (the last 2 of 8 = 25%) are the trim
+const cells = [];
+for (let r = 0; r < ROWS; r++) {
+  for (let c = 0; c < COLS; c++) {
+    cells.push({ r, c, cut: c >= CUT_FROM_COL, i: r * COLS + c });
+  }
+}
+
+// Two columns of the same offer, before vs after the load cut.
+const compare = [
+  {
+    key: "panel",
+    label: "Panel-only quote",
+    sub: "sized to the raw load",
+    array: "100%",
+    rows: [
+      { k: "System size", v: "Full" },
+      { k: "Upfront price", v: "Highest" },
+      { k: "Payback", v: "Longest" },
+      { k: "Your profit centers", v: "One" },
+    ],
+  },
+  {
+    key: "eff",
+    label: "Efficiency-first",
+    sub: "load cut 20–30% first",
+    array: "≈ 25% smaller",
+    rows: [
+      { k: "System size", v: "20–30% smaller", good: true },
+      { k: "Upfront price", v: "Drops with it", good: true },
+      { k: "Payback", v: "Months faster", good: true },
+      { k: "Your profit centers", v: "Two", good: true },
+    ],
+  },
+];
+---
+
+<section class="section sz" id="sizing" aria-labelledby="sz-title">
+  <div class="container">
+    <div class="sz__head reveal">
+      <p class="eyebrow">The math</p>
+      <h2 class="sz__title" id="sz-title">Shrink the load. Shrink the array.</h2>
+      <p class="sz__lede lede">
+        A solar system sized to a building's raw consumption is sized to its
+        waste. Cut the waste first and the array you need shrinks by the same
+        share, and so does everything that makes solar a hard sell.
+      </p>
+    </div>
+
+    <div class="sz__stage reveal">
+      <!-- the array, drawn full, trimmed live to its efficient size -->
+      <figure class="sz__array" aria-hidden="true">
+        <div class="sz__grid" style={`--cols:${COLS}`}>
+          {cells.map((cell) => (
+            <span
+              class={`sz__cell${cell.cut ? " sz__cell--cut" : ""}`}
+              style={`--i:${cell.i}`}
+            ></span>
+          ))}
+        </div>
+        <div class="sz__array-tags">
+          <span class="sz__tag sz__tag--keep">Sized to the real load</span>
+          <span class="sz__tag sz__tag--cut">
+            <span class="sz__tag-x" aria-hidden="true">&times;</span>
+            Panels you stop paying for
+          </span>
+        </div>
+      </figure>
+
+      <!-- the load bar: waste shaved off, then the array follows -->
+      <div class="sz__loadwrap">
+        <p class="sz__load-label">The building's annual load</p>
+        <div class="sz__bar" role="img" aria-label="The building's load, with roughly a quarter removed by efficiency before solar is sized.">
+          <span class="sz__bar-keep">
+            <span class="sz__bar-txt">Load solar must offset</span>
+          </span>
+          <span class="sz__bar-cut">
+            <span class="sz__bar-txt">Waste, removed first</span>
+          </span>
+        </div>
+        <p class="sz__load-note">
+          Harmonization, HVAC, and refrigeration efficiency take 20–30%+ off the
+          number before a single panel is sized.<Disc to="results" />
+        </p>
+      </div>
+    </div>
+
+    <div class="sz__compare">
+      {compare.map((col) => (
+        <div class={`sz__card sz__card--${col.key} reveal`}>
+          <div class="sz__card-head">
+            <p class="sz__card-label">{col.label}</p>
+            <p class="sz__card-sub">{col.sub}</p>
+          </div>
+          <p class="sz__card-array">
+            <span class="sz__card-array-val">{col.array}</span>
+            <span class="sz__card-array-unit">array</span>
+          </p>
+          <ul class="sz__card-rows">
+            {col.rows.map((row) => (
+              <li class={row.good ? "is-good" : ""}>
+                <span class="sz__row-k">{row.k}</span>
+                <span class="sz__row-v">{row.v}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="sz__payoff reveal">
+      <p class="sz__payoff-line">
+        The freed cash flow from the load cut helps fund the array, so the
+        client's ROI starts before the panels do, and the smaller, cheaper
+        system is the one that finally pencils.
+      </p>
+      <CtaPair />
+    </div>
+  </div>
+</section>
+
+<style>
+  .sz {
+    border-top: 1px solid var(--line);
+    background:
+      radial-gradient(ellipse 46% 40% at 92% 0%, var(--mint-soft), transparent 70%),
+      var(--bg);
+  }
+  .sz__head { max-width: 54rem; }
+  .sz__title { font-size: var(--step-3); max-width: 18ch; }
+  .sz__lede { margin-top: var(--space-m); max-width: 56ch; }
+
+  /* stage: the array on the left, the load bar on the right */
+  .sz__stage {
+    margin-top: var(--space-xl);
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .sz__array { margin: 0; }
+  .sz__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: clamp(4px, 0.9vw, 9px);
+    padding: clamp(0.6rem, 1.6vw, 1rem);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+  }
+  .sz__cell {
+    aspect-ratio: 1 / 1.5;
+    border-radius: 2px;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--mint) 34%, var(--surface-2)) 0%, var(--surface-2) 70%);
+    border: 1px solid color-mix(in srgb, var(--mint) 22%, transparent);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+  /* trimmed cells read as red waste, then collapse out */
+  .sz__cell--cut {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--cost) 30%, var(--surface-2)), var(--surface-2));
+    border-color: color-mix(in srgb, var(--cost) 38%, transparent);
+  }
+  .sz__array-tags {
+    margin-top: var(--space-s);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.2rem;
+  }
+  .sz__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.03em;
+    color: var(--muted);
+  }
+  .sz__tag::before {
+    content: "";
+    width: 0.7em; height: 0.7em; border-radius: 2px;
+    background: color-mix(in srgb, var(--mint) 40%, var(--surface-2));
+    border: 1px solid color-mix(in srgb, var(--mint) 30%, transparent);
+  }
+  .sz__tag--cut::before {
+    background: color-mix(in srgb, var(--cost) 34%, var(--surface-2));
+    border-color: color-mix(in srgb, var(--cost) 38%, transparent);
+  }
+  .sz__tag--cut { color: var(--cost); }
+  .sz__tag-x { display: none; }
+
+  /* load bar */
+  .sz__load-label,
+  .sz__load-note {
+    font-size: var(--step--1);
+    color: var(--body);
+    line-height: 1.5;
+  }
+  .sz__load-note { margin-top: var(--space-s); color: var(--muted); max-width: 44ch; }
+  .sz__bar {
+    margin-top: var(--space-xs);
+    display: flex;
+    height: clamp(3rem, 7vw, 4.2rem);
+    border-radius: var(--radius-s);
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+  }
+  .sz__bar-keep,
+  .sz__bar-cut {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    transition: flex-basis 1s var(--ease-out-quart);
+  }
+  .sz__bar-keep {
+    flex: 0 0 100%;
+    background: color-mix(in srgb, var(--mint) 22%, var(--surface));
+    color: var(--mint);
+  }
+  .sz__bar-cut {
+    flex: 0 0 0%;
+    background: color-mix(in srgb, var(--cost) 24%, var(--surface));
+    color: var(--cost);
+  }
+  .sz__bar-txt {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    padding: 0 0.6rem;
+    opacity: 0.9;
+  }
+
+  /* comparison cards */
+  .sz__compare {
+    margin-top: var(--space-xl);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--space-m);
+  }
+  .sz__card {
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .sz__card--eff {
+    border-color: color-mix(in srgb, var(--mint) 38%, transparent);
+    background:
+      linear-gradient(180deg, var(--mint-soft), transparent 60%), var(--surface);
+  }
+  .sz__card-label { font-size: var(--step-1); color: var(--ink); font-weight: 600; }
+  .sz__card--eff .sz__card-label { color: var(--mint); }
+  .sz__card-sub { margin-top: 0.15rem; font-size: var(--step--1); color: var(--muted); }
+  .sz__card-array {
+    margin-top: var(--space-m);
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+  .sz__card-array-val {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .sz__card--eff .sz__card-array-val { color: var(--mint); }
+  .sz__card-array-unit {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .sz__card-rows { list-style: none; margin: var(--space-m) 0 0; padding: 0; }
+  .sz__card-rows li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--line);
+    font-size: var(--step--1);
+  }
+  .sz__row-k { color: var(--body); }
+  .sz__row-v { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+  .sz__card-rows li.is-good .sz__row-v { color: var(--mint); font-weight: 500; }
+
+  .sz__payoff { margin-top: var(--space-xl); max-width: 46rem; }
+  .sz__payoff-line {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 50ch;
+    margin-bottom: var(--space-l);
+    text-wrap: balance;
+  }
+
+  @media (max-width: 48rem) {
+    .sz__stage { grid-template-columns: 1fr; }
+  }
+
+  /* motion: the waste shaves off the bar, the trimmed panels collapse out */
+  @media (prefers-reduced-motion: no-preference) {
+    .sz__cell--cut {
+      transition:
+        opacity 0.5s ease calc(var(--i) * 0.012s),
+        transform 0.6s var(--ease-out-quart) calc(var(--i) * 0.012s);
+    }
+    .sz.is-armed .sz__cell--cut {
+      opacity: 0.12;
+      transform: scale(0.55);
+    }
+    .sz.is-armed .sz__bar-keep { flex-basis: 74%; }
+    .sz.is-armed .sz__bar-cut { flex-basis: 26%; }
+  }
+
+  /* reduced motion / no-JS fallback: show the efficient end-state up front */
+  @media (prefers-reduced-motion: reduce) {
+    .sz__cell--cut { opacity: 0.14; transform: scale(0.55); }
+    .sz__bar-keep { flex-basis: 74%; }
+    .sz__bar-cut { flex-basis: 26%; }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const sec = document.getElementById("sizing");
+    if (!sec) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!("IntersectionObserver" in window)) { sec.classList.add("is-armed"); return; }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { sec.classList.add("is-armed"); io.disconnect(); }
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(sec.querySelector(".sz__stage") || sec);
+  })();
+</script>

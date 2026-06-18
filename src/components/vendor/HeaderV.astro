@@ -1,0 +1,26 @@
+---
+// Vendor-page header. Same lockup + nav mechanics as Header.astro; the
+// wordmark tag reads "Partners" and the nav points at the vendor narrative.
+import logo from "../../assets/energy-plus-logo.png";
+---
+
+<header class="site-header" id="top">
+  <div class="container site-header__inner">
+    <a href="#top" class="wordmark" aria-label="Energy Plus Partners, home">
+      <img class="wordmark__logo" src={logo.src} width="118" height="34" alt="Energy Plus" />
+      <span class="wordmark__div" aria-hidden="true"></span>
+      <span class="wordmark__hotels">Partners</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#sizing" class="site-nav__link">The math</a>
+      <a href="#why-deals-die" class="site-nav__link">Why deals die</a>
+      <a href="#profit" class="site-nav__link">Your margin</a>
+      <a href="#proof" class="site-nav__link">Proof</a>
+      <a href="#book" class="btn site-header__cta">
+        Become a Partner
+        <span class="btn__arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </nav>
+  </div>
+</header>

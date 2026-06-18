@@ -1,0 +1,85 @@
+---
+// Vendor reframe of Success. Wait/act for the installer: keep selling the
+// panel alone, or lead with efficiency and close both phases.
+const wait = [
+  "You keep losing deals to sticker shock and long payback",
+  "The efficiency margin goes to someone else's invoice",
+  "Every job goes back out to bid",
+  "You compete on price for one box",
+];
+const act = [
+  "Smaller systems that pencil and close",
+  "A Phase-1 profit center on every deal",
+  "The client stops shopping you",
+  "You sell the whole solution, not a panel",
+];
+---
+
+<section class="section win" id="success" aria-labelledby="win-title">
+  <div class="container container--narrow">
+    <div class="win__head reveal">
+      <h2 class="win__title" id="win-title">The vendor who closes both phases.</h2>
+    </div>
+
+    <div class="win__split">
+      <div class="win__col win__col--wait reveal">
+        <p class="win__label">If you keep selling the panel alone</p>
+        <ul class="win__list">
+          {wait.map((t, i) => (
+            <li class="win__item reveal" style={`--i: ${i + 1}`}><span class="win__mark" aria-hidden="true">&#10005;</span>{t}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="win__col win__col--act reveal" style="--i: 1">
+        <p class="win__label">When you lead with efficiency</p>
+        <ul class="win__list">
+          {act.map((t, i) => (
+            <li class="win__item reveal" style={`--i: ${i + 1}`}><span class="win__mark" aria-hidden="true">&#10003;</span>{t}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .win { border-top: 1px solid var(--line); }
+  .win__head { max-width: 40rem; }
+  .win__title { font-size: var(--step-3); max-width: 18ch; }
+  .win__split {
+    margin-top: var(--space-xl);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-m);
+  }
+  .win__col {
+    padding: clamp(1.3rem, 3.5vw, 2rem);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .win__col--act { border-color: color-mix(in srgb, var(--mint) 36%, transparent); }
+  .win__label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .win__col--act .win__label { color: var(--mint); }
+  .win__list { list-style: none; margin: var(--space-m) 0 0; padding: 0; display: grid; gap: 0.85rem; }
+  .win__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: start;
+    font-size: var(--step-0);
+    line-height: 1.45;
+    color: var(--body);
+  }
+  .win__mark { font-weight: 700; line-height: 1.4; }
+  .win__col--wait .win__mark { color: var(--cost); }
+  .win__col--act .win__mark { color: var(--mint); }
+  .win__col--act .win__item { color: var(--ink); }
+</style>

@@ -1,0 +1,160 @@
+---
+// Homepage of the Energy Plus solar/vendor site. Dark "Mix" instrument theme;
+// the protagonist is the solar vendor/installer: efficiency-first shrinks the
+// load, which shrinks the array, which makes solar an easier sell and opens a
+// Phase-1 profit center.
+//
+// Reuses audience-neutral visual machinery (Engineer, Proof, HvacLean,
+// Harmonizer, Team) via props/slots. Vendor-specific sections live in
+// src/components/vendor.
+import Base from "../layouts/Base.astro";
+import Header from "../components/vendor/HeaderV.astro";
+import Hero from "../components/vendor/HeroV.astro";
+import SizingMath from "../components/vendor/SizingMath.astro";
+import DealsDie from "../components/vendor/DealsDie.astro";
+import ProblemV from "../components/vendor/ProblemV.astro";
+import ProfitCenters from "../components/vendor/ProfitCenters.astro";
+import OfferV from "../components/vendor/OfferV.astro";
+import PlanV from "../components/vendor/PlanV.astro";
+import Engineer from "../components/Engineer.astro";
+import Proof from "../components/Proof.astro";
+import HvacLean from "../components/HvacLean.astro";
+import Harmonizer from "../components/Harmonizer.astro";
+import SuccessV from "../components/vendor/SuccessV.astro";
+import Team from "../components/Team.astro";
+import FinalCtaV from "../components/vendor/FinalCtaV.astro";
+import Footer from "../components/vendor/FooterV.astro";
+import CtaPairV from "../components/vendor/CtaPairV.astro";
+
+const title = "Energy Plus Partners: close more solar by shrinking the load first";
+const description =
+  "Cut a building's load 20-30% with efficiency before you size solar. Smaller array, lower price, faster payback, plus a Phase-1 profit center. White-label efficiency for solar vendors.";
+---
+
+<Base title={title} description={description}>
+  <div class="theme-dark">
+    <div class="bp-ambient" data-parallax aria-hidden="true"></div>
+    <Header />
+    <main id="main">
+      <Hero />
+      <SizingMath />
+      <DealsDie />
+      <ProblemV />
+      <ProfitCenters />
+      <div class="paper"><OfferV /></div>
+      <PlanV />
+      <Engineer
+        lead="For four decades, the institutions that couldn't afford a wrong decision brought Cliff in first. The engineering muscle behind your new efficiency offering is the same one DOE, the UAE grid, and ASTM trusted."
+      >
+        <CtaPairV slot="cta" />
+      </Engineer>
+      <div class="paper"><Proof /></div>
+      <HvacLean
+        title="Your client's biggest load is almost half their energy bill."
+        lede="We carry more than 20 HVAC solutions, so you match the right fix to each building instead of forcing one product to fit. This is the stack you'd be reselling. A few of the most popular:"
+      />
+      <Harmonizer />
+      <SuccessV />
+      <Team
+        title="Who's behind your offering."
+        lede="Not a network of strangers. A team with verified credentials at the highest levels of government, infrastructure, and commercial energy, standing behind every proposal you put your name on."
+      />
+      <FinalCtaV />
+    </main>
+    <Footer />
+  </div>
+</Base>
+
+<style is:global>
+  /* --- Slate graphite: the dominant surface ---------------------------- */
+  .theme-dark {
+    --bg: #141a1e; --bg-header: #0f1418; --hero-from: #1c2329; --hero-to: #141a1e;
+    --surface: #1d242b; --surface-2: #252e36;
+    --ink: #eef1ef; --body: #bac2c1; --muted: #8b9592;
+    --gold: #1f8390; --gold-text: #46cfd6; --mint: #46cfd6; --cost: #c87a64;
+    --h-red: #c87a64; --h-teal: #46cfd6;
+    --line: rgba(220, 230, 230, 0.12); --line-strong: rgba(220, 230, 230, 0.2);
+    --gold-soft: rgba(31, 131, 144, 0.12); --mint-soft: rgba(70, 207, 214, 0.13);
+    --shadow-lift: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 22px 50px -24px rgba(0, 0, 0, 0.85);
+    --shadow-tilt: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 36px 70px -28px rgba(0, 0, 0, 0.92),
+      0 0 0 1px color-mix(in srgb, var(--gold) 32%, transparent);
+    --font-serif: "Newsreader Variable", "Newsreader", Georgia, "Times New Roman", serif;
+    --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, monospace;
+    background: #141a1e; color: #eef1ef;
+  }
+
+  /* (1) cards lift off the slate */
+  .theme-dark :is(.offerl__box, .probl__panel, .step, .win__col, .eng__card,
+    .eng__tile, .eng__photo, .est__measured, .hz__card, .case,
+    .sz__card, .profit__phase) {
+    box-shadow: var(--shadow-lift);
+  }
+  /* living cards: 3D tilt toward the cursor (JS sets the transform), with a
+     deeper drop + teal edge ring while engaged */
+  .theme-dark :is(.case, .eng__card, .eng__tile, .probl__panel, .offerl__box,
+    .win__col, .step, .est__measured, .sz__card, .profit__phase) {
+    transform-style: preserve-3d;
+    transition: transform 0.5s var(--ease-out-quart), box-shadow 0.5s ease;
+    will-change: transform;
+  }
+  .theme-dark .is-tilting {
+    transition: transform 0.07s linear, box-shadow 0.25s ease;
+    box-shadow: var(--shadow-tilt);
+    z-index: 2;
+  }
+
+  /* (2)+(3) ambient teal/red light, parallaxed by the pointer. */
+  .bp-ambient {
+    position: fixed; inset: -8%; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(42% 34% at 14% 18%, color-mix(in srgb, var(--mint) 42%, transparent), transparent 68%),
+      radial-gradient(48% 42% at 90% 52%, color-mix(in srgb, var(--gold) 38%, transparent), transparent 70%),
+      radial-gradient(44% 36% at 52% 98%, color-mix(in srgb, var(--cost) 26%, transparent), transparent 68%);
+    mix-blend-mode: screen;
+    opacity: 0.75;
+    transform: translate3d(var(--px, 0), var(--py, 0), 0);
+    transition: transform 0.7s var(--ease-out-quart);
+    will-change: transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bp-ambient { transition: none; transform: none; }
+  }
+  .theme-dark .paper { position: relative; z-index: 1; }
+
+  /* (4) magnetic CTA */
+  .theme-dark .btn {
+    position: relative; overflow: hidden;
+    transform: translate(var(--bx, 0px), var(--by, 0px));
+    transition: transform 0.3s var(--ease-out-quart), background-color 0.3s ease;
+  }
+  .theme-dark .btn:hover { transform: translate(var(--bx, 0px), calc(var(--by, 0px) - 2px)); }
+  .theme-dark .btn::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(90px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--gold) 55%, transparent), transparent 60%);
+    mix-blend-mode: soft-light;
+    opacity: 0; transition: opacity 0.35s ease;
+  }
+  .theme-dark .btn:hover::after { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-dark .btn { transform: none; }
+    .theme-dark .btn:hover { transform: translateY(-2px); }
+  }
+  .theme-dark .btn { background: var(--ink); color: var(--bg); }
+  .theme-dark .btn:hover { background: #ffffff; box-shadow: none; }
+  .theme-dark .afl__fig { color: var(--cost) !important; }
+
+  /* --- Inserts: muted, charcoal-leaning off-white ----------------------- */
+  .theme-dark .paper {
+    --bg: #d4d8d2; --surface: #dde0da; --surface-2: #cbcfc9;
+    --ink: #1a1d1a; --body: #3c413b; --muted: #5d625b;
+    --gold: #0a5a63; --gold-text: #0a5a63; --mint: #0a5a63; --cost: #8f4030;
+    --h-red: #8f4030; --h-teal: #0a5a63;
+    --line: rgba(20, 25, 20, 0.14); --line-strong: rgba(20, 25, 20, 0.22);
+    --gold-soft: rgba(10, 90, 99, 0.09); --mint-soft: rgba(10, 90, 99, 0.12);
+    --shadow-lift: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 16px 40px -28px rgba(0, 0, 0, 0.22);
+    background: #d4d8d2; color: #1a1d1a;
+  }
+  .theme-dark .paper .btn:hover { background: #2f352e; }
+</style>
